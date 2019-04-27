@@ -1,0 +1,19 @@
+{
+  "name": "s3-housekeeping-scripts",
+  "version": "0.1.0",
+  "license": "GPL-3.0",
+  "description": "housekeeping helper scripts for s3",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AcrossTheCloud/s3-housekeeping.git"
+  },
+  "author": "Matthew Berryman",
+  "bugs": {
+    "url": "https://github.com/AcrossTheCloud/s3-housekeeping/issues"
+  },
+  "homepage": "https://github.com/AcrossTheCloud/s3-housekeeping",
+  "dependencies": {
+    "aws-sdk": "^2.444.0",
+    "command-line-args": "^5.1.1"
+  }
+}
