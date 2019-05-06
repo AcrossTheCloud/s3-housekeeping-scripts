@@ -46,8 +46,10 @@ async function run() {
               }
             }
           };
-          let restoreData = await s3.restoreObject(objectParams).promise();
-          console.log(restoreData);
+          s3.restoreObject(objectParams, function (err, resultData) {
+            if (err) console.log(err, err.stack); // an error occurred
+            else console.log(resultData);           // successful response
+          });
         }
       });
     } catch (error) {
