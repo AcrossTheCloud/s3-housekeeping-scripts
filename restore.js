@@ -46,9 +46,17 @@ async function run() {
               }
             }
           };
-          s3.restoreObject(objectParams, function (err, resultData) {
-            if (err) console.log(err, err.stack); // an error occurred
-            else console.log(resultData);           // successful response
+          s3.headObject({Bucket: options.bucket, Key: item.Key}, function(err, head) {
+            if (err) {
+              console.log(err);
+            } else if (head.Restore.includes('false')) {
+              s3.restoreObject(objectParams, function (restoreErr, resultData) {
+                if (restoreErr) console.log(restoreErr); // an error occurred
+                else console.log('restoring: ' + item.Key);           // successful response
+              }); 
+            } else {
+              console.log('in-progress: ' + item.Key);
+            }
           });
         }
       });
