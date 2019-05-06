@@ -49,13 +49,13 @@ async function run() {
           s3.headObject({Bucket: options.bucket, Key: item.Key}, function(err, head) {
             if (err) {
               console.log(err);
-            } else if (head.Restore.includes('false')) {
+            } else if (!head.Restore) {
               s3.restoreObject(objectParams, function (restoreErr, resultData) {
                 if (restoreErr) console.log(restoreErr); // an error occurred
                 else console.log('restoring: ' + item.Key);           // successful response
               }); 
             } else {
-              console.log('in-progress: ' + item.Key);
+              console.log('restore status of ' + item.Key + ': ' + head.Restore);
             }
           });
         }
