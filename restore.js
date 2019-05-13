@@ -60,7 +60,11 @@ async function run() {
               s3.restoreObject(objectParams, function (restoreErr, resultData) {
                 if (restoreErr) {
                   if (restoreErr.code === 'SlowDown') {
-                    sleepDelay += 100;
+                    if (sleepDelay === 0) {
+                      sleepDelay = 100;
+                    } else {
+                      sleepDelay *= 2;
+                    }
                     await sleep(sleepDelay);
                     await s3.restoreObject(objectParams).promise(); 
                     console.log('restoring: ' + item.Key)
