@@ -21,6 +21,12 @@ if (options.profile) {
   AWS.config.credentials = new AWS.SharedIniFileCredentials({ profile: options.profile });
 }
 
+let sleepDelay = 0;
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 const s3 = new AWS.S3();
 
 let bucketParams = {
@@ -50,8 +56,18 @@ async function run() {
             if (err) {
               console.log(err);
             } else if (!head.Restore) {
+              await sleep(sleepDelay);
               s3.restoreObject(objectParams, function (restoreErr, resultData) {
-                if (restoreErr) console.log(restoreErr); // an error occurred
+                if (restoreErr) {
+                  if (restoreErr.code === 'SlowDown') {
+                    sleepDelay += 100;
+                    await sleep(sleepDelay);
+                    await s3.restoreObject(objectParams).promise(); 
+                    console.log('restoring: ' + item.Key)
+                  } else {
+                    console.log(restoreErr); // an error occurred
+                  } 
+                }
                 else console.log('restoring: ' + item.Key);           // successful response
               }); 
             } else {
